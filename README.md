@@ -10,7 +10,7 @@ Built as a portfolio project targeting data analytics roles in banking and finan
 
 - **Source:** Kaggle — Financial Transactions Dataset
 - **Size:** 50,000 rows
-- **Key columns:** `AccountID`, `TransactionAmount`, `TransactionDate`, `TransactionType`, `Location`, `LoginAttempts`, `AccountBalance`, and more
+- **Key columns:** `AccountID`, `TransactionAmount`, `Location`, `LoginAttempts`, `AccountBalance`, and more
 
 ---
 
@@ -40,28 +40,28 @@ Transactions above $100 are flagged as High Risk based on a defined monetary thr
 | Normal    | Low        | Auto-Approved      |
 
 ```excel
-=VLOOKUP(Risk_Flag, RiskPolicyTable, 3, FALSE)
+=VLOOKUP(Risk_Flag, RiskClassificationTable, 3, FALSE)
 ```
 
 ---
 
-### Signal 2 — Account Health Risk (`Balance_Status`)
+### Signal 2 — Account Health Risk (`Account_Ballace_Sufficiency`)
 
 ```excel
-=IF(AccountBalance < 1000, "Low Balance", "Sufficient Balance")
+=IF(Account_Balance < 1000, "Low Balance", "Sufficient Balance")
 ```
 
-Accounts with a balance below $1,000 are classified as elevated risk.
+Accounts with a balance below $1,000 are classified as elevated risk. Result stored in column `Account_Ballace_Sufficiency` (original dataset column name).
 
 **VLOOKUP enrichment — `Balance_Action`:**
 
-| Balance_Status     | Alert_Level | Action          |
-|--------------------|-------------|-----------------|
-| Low Balance        | Elevated    | Flag for Review |
-| Sufficient Balance | Low         | No Action       |
+| Account_Ballace_Sufficiency | Alert_Level | Action          |
+|-----------------------------|-------------|-----------------|
+| Low Balance                 | Elevated    | Flag for Review |
+| Sufficient Balance          | Low         | No Action       |
 
 ```excel
-=VLOOKUP(Balance_Status, BalancePolicyTable, 3, FALSE)
+=VLOOKUP(Account_Ballace_Sufficiency, BalanceClassificationTable, 3, FALSE)
 ```
 
 ---
@@ -114,8 +114,8 @@ High Risk transactions carry a **~19% higher average value** than Normal transac
 
 | Signal            | Logic            | Risk Indicator        |
 |-------------------|------------------|-----------------------|
-| Transaction Value | Amount > $100    | High transaction risk |
-| Account Health    | Balance < $1,000 | Elevated account risk |
+| Transaction Value (`Risk_Flag`)                | Amount > $100    | High transaction risk |
+| Account Health (`Account_Ballace_Sufficiency`) | Balance < $1,000 | Elevated account risk |
 
 Combining both signals enables a more complete fraud risk profile than either rule alone.
 
